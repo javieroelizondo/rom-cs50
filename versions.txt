@@ -23,6 +23,7 @@ Test all endpoints using tools like curl or Postman.
 Why This Matters:
 User authentication is critical for any web application, and CRUD operations form the backbone of your app's functionality. Testing ensures reliability before moving to the frontend.
 
+
 v2: Frontend Development
 Goal: Build a simple frontend using HTML, CSS, and JavaScript with Flask templates.
 Tasks:
@@ -36,7 +37,7 @@ Use JavaScript for client-side interactivity (e.g., form validation).
 Why This Matters:
 A well-designed frontend enhances user experience. Bootstrap/TailwindCSS saves time on styling, and Jinja2 allows seamless integration between the backend and frontend.
 
-v3: Tasks Management
+v3: Tasks Management  (ALREADY IMPLEMENTED IN V2)
 Goal: Add task management functionality.
 Tasks:
 
