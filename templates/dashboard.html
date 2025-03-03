@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">Dashboard</h2>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <a href="{{ url_for('create_operation') }}" class="btn btn-success mb-3">Create Operation</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Rig Name</th>
+                    <th>Description</th>
+                    <th>Progress (%)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for op in operations %}
+                <tr>
+                    <td>{{ op.id }}</td>
+                    <td>{{ op.name }}</td>
+                    <td>{{ op.rig_name }}</td>
+                    <td>{{ op.description or '-' }}</td>
+                    <td>{{ "%.2f"|format(op.progress) }}%</td>
+                    <td>{{ op.status }}</td>
+                    <td>
+                        {% if op.user_id == session['user_id'] %}
+                            <a href="{{ url_for('edit_operation', id=op.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_operation', id=op.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -12,7 +12,13 @@ def get_current_user():
 
 @app.route('/')
 def home():
-    return "Welcome to RigOps Manager!"
+    if 'user_id' in session:
+        # If the user is logged in, redirect to the dashboard
+        return redirect(url_for('dashboard'))
+    else:
+        # If the user is not logged in, redirect to the login page
+        flash('Please log in to continue.', 'info')
+        return redirect(url_for('login'))
 
 # Dashboard Route (Protected)
 @app.route('/dashboard')
@@ -21,7 +27,9 @@ def dashboard():
         flash('You need to log in first.', 'warning')
         return redirect(url_for('login'))
 
-    return "Welcome to the Dashboard!"
+    # Fetch all rig operations for viewing
+    operations = RigOperation.query.all()
+    return render_template('dashboard.html', operations=operations)
 
 
 # Login Route
@@ -83,83 +91,82 @@ def register():
 # API Endpoints for Rig Operations
 
 # Create a new rig operation
-@app.route('/api/operations', methods=['POST'])
+@app.route('/create-operation', methods=['GET', 'POST'])
 def create_operation():
     user = get_current_user()
     if not user:
-        return jsonify({'error': 'Unauthorized'}), 401
+        flash('You need to log in first.', 'warning')
+        return redirect(url_for('login'))
 
-    data = request.get_json()
-    name = data.get('name')
-    description = data.get('description')
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        rig_name = request.form['rig_name']
+        progress = float(request.form.get('progress', 0.0))
+        status = request.form.get('status', "-")
 
-    if not name:
-        return jsonify({'error': 'Name is required'}), 400
+        # Validate input
+        if not name or not rig_name:
+            flash('Name and Rig Name are required.', 'danger')
+            return redirect(url_for('create_operation'))
 
-    operation = RigOperation(name=name, description=description, user_id=user.id)
-    db.session.add(operation)
-    db.session.commit()
+        operation = RigOperation(
+            name=name,
+            description=description,
+            rig_name=rig_name,
+            progress=progress,
+            status=status,
+            user_id=user.id
+        )
+        db.session.add(operation)
+        db.session.commit()
 
-    return jsonify({
-        'id': operation.id,
-        'name': operation.name,
-        'description': operation.description,
-        'user_id': operation.user_id
-    }), 201
+        flash('Rig operation created successfully!', 'success')
+        return redirect(url_for('dashboard'))
 
-# Get all rig operations for the current user
-@app.route('/api/operations', methods=['GET'])
-def list_operations():
+    return render_template('create_operation.html')
+
+# Edit a rig operation
+@app.route('/edit-operation/<int:id>', methods=['GET', 'POST'])
+def edit_operation(id):
     user = get_current_user()
     if not user:
-        return jsonify({'error': 'Unauthorized'}), 401
-
-    operations = RigOperation.query.filter_by(user_id=user.id).all()
-    result = [{
-        'id': op.id,
-        'name': op.name,
-        'description': op.description,
-        'user_id': op.user_id
-    } for op in operations]
-
-    return jsonify(result), 200
-
-# Update a rig operation
-@app.route('/api/operations/<int:id>', methods=['PUT'])
-def update_operation(id):
-    user = get_current_user()
-    if not user:
-        return jsonify({'error': 'Unauthorized'}), 401
+        flash('You need to log in first.', 'warning')
+        return redirect(url_for('login'))
 
     operation = RigOperation.query.get_or_404(id)
     if operation.user_id != user.id:
-        return jsonify({'error': 'Forbidden'}), 403
+        flash('You are not authorized to edit this operation.', 'danger')
+        return redirect(url_for('dashboard'))
 
-    data = request.get_json()
-    operation.name = data.get('name', operation.name)
-    operation.description = data.get('description', operation.description)
+    if request.method == 'POST':
+        operation.name = request.form['name']
+        operation.description = request.form['description']
+        operation.rig_name = request.form['rig_name']
+        operation.progress = float(request.form['progress'])
+        operation.status = request.form['status']
 
-    db.session.commit()
+        db.session.commit()
+        flash('Rig operation updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
 
-    return jsonify({
-        'id': operation.id,
-        'name': operation.name,
-        'description': operation.description,
-        'user_id': operation.user_id
-    }), 200
+    return render_template('edit_operation.html', operation=operation)
 
 # Delete a rig operation
-@app.route('/api/operations/<int:id>', methods=['DELETE'])
+@app.route('/delete-operation/<int:id>', methods=['POST'])
 def delete_operation(id):
     user = get_current_user()
     if not user:
-        return jsonify({'error': 'Unauthorized'}), 401
+        flash('You need to log in first.', 'warning')
+        return redirect(url_for('login'))
 
     operation = RigOperation.query.get_or_404(id)
     if operation.user_id != user.id:
-        return jsonify({'error': 'Forbidden'}), 403
+        flash('You are not authorized to delete this operation.', 'danger')
+        return redirect(url_for('dashboard'))
 
     db.session.delete(operation)
     db.session.commit()
 
-    return jsonify({'message': 'Operation deleted successfully'}), 200
+    flash('Rig operation deleted successfully!', 'success')
+    return redirect(url_for('dashboard'))
