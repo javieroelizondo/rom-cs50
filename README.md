@@ -3,7 +3,8 @@ RigOps Manager is a Flask-based application for managing rig operations.
 *** Feel free to contribute, report issues, or suggest improvements on GitHub! ***
 
 ## Link to video:
-[pending to generate and upload a video to youtube]
+> [!CAUTION]
+> Pending to generate and upload a video to youtube for CS50.
 
 ## Table of Contents
 
@@ -40,8 +41,9 @@ The main entry point of the application.
     Starts the Flask development server when executed.
 
 > [!NOTE]
-Use SQLAlchemy to simplify the coding and to be able to implement the back end with SQL or no-SQL in the future. SQLAlchemy can handle the sqlite database creation. 
-On the other hand, If implemented sqlite code directly, It'd be less flexible. 
+> Use SQLAlchemy to simplify the coding and to be able to implement the back end with SQL or no-SQL in the future. SQLAlchemy can handle the sqlite database creation.
+> On the other hand, If the sqlite code directly, It'd be less flexible. 
+
 ### SQLite Database :
 -   Stores user accounts and rig operations.
 -   Tables include user and rig_operation.
@@ -70,7 +72,7 @@ Files include base.html, dashboard.html, create_operation.html, edit_operation.h
     - register.html : Registration form for new users.
 
 ### static/ :
-*** empty *** Reserved for static assets like CSS, JavaScript, or images (to be expanded in future versions).
+**Empty** Only contains the screenshot for this README file.
 
 ### requirements.txt :
 Lists all Python dependencies required to run the application.
@@ -87,7 +89,7 @@ Passwords are hashed using Flask-Bcrypt to prevent plaintext storage in the data
 2. Data Privacy
 While all logged-in users can view all rig operations, only the creator of an operation can modify or delete it. This ensures data privacy and prevents unauthorized changes.
 3. Frontend with Jinja
-For v2 , I chose to implement the frontend using Python + Jinja templates instead of AJAX for simplicity. This approach allows users to interact with the application without requiring advanced JavaScript knowledge.
+For v2, I chose to implement the front end using Python + Jinja templates instead of AJAX for simplicity. This approach allows users to interact with the application without requiring advanced JavaScript knowledge.
 Future versions will include AJAX for dynamic updates and a more interactive user experience. Furthermore, implement React components to only render dynamic components and not the whole webpage.
 4. Database Schema
 The RigOperation model was extended to include Progress %, Status, and Rig Name fields to provide more context and functionality for managing rig operations.
@@ -111,10 +113,9 @@ Deploy the application to a cloud platform like Heroku or Render for public acce
 ## Additional Features :
 Add filtering and sorting options to the dashboard for better usability.
 Implement real-time notifications using WebSockets.
-Implement an v2 of the dashboard including a dynamic Gantt chart as the main graphic.
+Implement a v2 of the dashboard including a dynamic Gantt chart as the main graphic.
 
 
-> [!NOTE]
 # How to Run
 1. Clone the repository:
     git clone https://github.com/javieroelizondo/rom-cs50.git
@@ -142,15 +143,19 @@ Implement an v2 of the dashboard including a dynamic Gantt chart as the main gra
     Open your browser and navigate to http://127.0.0.1:5000/
 
 > [!TIP]
+> Follow the recommended format
+
 ## Recommended format for creating rig operations
 
-Name:   Field used to describe the type of operation *(future version will change the name of the column to Type, and implement a pop-up list to select from it)* 
+**Name:**   Field used to describe the type of operation *(future version will change the name of the column to Type, and implement a pop-up list to select from it)* 
         Recommended to define coherent abreviations like:  DRL (drilling), CON (completion), WO (workover), ABN (abandonment)
 
-Rig Name: Field used to describe the name of the well or location.
+**Rig Name:** Field used to describe the name of the well or location.
         Recommended to generate name with the format NNN-### using three letters for an abreviation of the field name (e.g. PCD ~ Cerro Dragon) and three numbers to define a rig in that field.
-> [!WARNING] The Rig Name is a UNIQUE identifier of a well.
+        
+> [!WARNING]
+> The Rig Name is a UNIQUE identifier of a well.
 
-Description: A short description of the activity to be executed at the rigsite.
+**Description:** A short description of the activity to be executed at the rigsite.
 
-![Screenshot of some added rig operations.](https://drive.google.com/file/d/1rfOsrlo_3fixt8KSJxF3QJ2Pge6yJAAk/view?usp=sharing)
+![Screenshot of some added rig operations.](https://github.com/javieroelizondo/rom-cs50/blob/main/static/Screenshot.png)
