@@ -147,8 +147,11 @@ Implement a v2 of the dashboard including a dynamic Gantt chart as the main grap
 
 ## Recommended format for creating rig operations
 
-**Name:**   Field used to describe the type of operation *(future version will change the name of the column to Type, and implement a pop-up list to select from it)* 
+**Type:**   Field used to describe the type of operation *(future version will change the name of the column to Type, and implement a pop-up list to select from it)* 
         Recommended to define coherent abreviations like:  DRL (drilling), CON (completion), WO (workover), ABN (abandonment)
+
+> [!IMPORTANT]
+> The field name and database labe of the rig operations is still NAME. The **Type** change was only update on the HTML output. Pending to change the **form** and **database structure**.
 
 **Rig Name:** Field used to describe the name of the well or location.
         Recommended to generate name with the format NNN-### using three letters for an abreviation of the field name (e.g. PCD ~ Cerro Dragon) and three numbers to define a rig in that field.
